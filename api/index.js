@@ -20,11 +20,11 @@ bot.onText(/\/start/, (msg) => {
     state = 0;
 });
 
-// input requires x1 x2 x3
+// input requires x1,x2,x3
 bot.onText(/\/predict/, (msg) => { 
     bot.sendMessage(
         msg.chat.id,
-        `masukan nilai x1|x2|x3 contohnya 9|9|5`
+        `masukan nilai x1|x2|x3 contohnya 7|7|7`
     );   
     state = 1;
 });
@@ -44,11 +44,11 @@ bot.on('message', (msg) => {
         ).then((jres)=>{
                 bot.sendMessage(
                     msg.chat.id,
-                    `Prediksi y1 Tegangan ${jres[0]}`
+                    `Prediksi y1 nilai ${jres[0]}`
                 );
                 bot.sendMessage(
                     msg.chat.id,
-                    `nilai y2 yang diprediksi adalah ${jres[1]}`
+                    `nilai yang diprediksi y2 ${jres[1]}`
                 ); 
                 bot.sendMessage(
                     msg.chat.id,

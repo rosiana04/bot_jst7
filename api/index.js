@@ -1,3 +1,4 @@
+
 var express = require('express');
 var r = express.Router();
 
@@ -6,38 +7,70 @@ const model = require('./sdk/model.js');
 
 // Bot Setting
 const TelegramBot = require('node-telegram-bot-api');
-const token = '5040677518:AAHV5a_H5BccIpJtYkUSC4GlYsIMTC9hkQw'
+const token = '5073546476:AAG4rie_ytVRpRfHLYNLt0cDz_YcjDidZAE'
 const bot = new TelegramBot(token, {polling: true});
 
-
+state = 0
 // bots
 bot.onText(/\/start/, (msg) => { 
     console.log(msg)
     bot.sendMessage(
         msg.chat.id,
-        `hello ${msg.chat.first_name}, welcome...\n
-        click /menu to main menu`
+        `halo selamat datang ! ${msg.chat.first_name}, welcome...\n
+        click /predict`
     );   
 });
-
-bot.onText(/\/menu/, (msg) => { 
-    console.log(msg)
+// input requires x1 , x2 dan x3
+bot.onText(/\/predict/, (msg) => { 
     bot.sendMessage(
         msg.chat.id,
-        `this is your main menu`
-    );   
+        `Masukan nilai x1|x2|x3 contohnya 7|7|7`
+    );
+    state = 1;
 });
 
+bot.on('message', (msg) => {
+    if(state == 1){
+        s = msg.text.split("|");
+        x1 = s[0]
+        x2 = s[1]
+        x3 = s[2]
+        model.predict(
+            [ 
+                parseFloat(s[0]), // string float
+                parseFloat(s[1]),
+                parseFloat(s[2])
+            ]
+        ).then((jres)=>{
+            bot.sendmessage(
+                msg.chat.id,
+                `Nilai y1 yang diprediksi adalah ${jres[0]}`
+            );  
+            bot.sendmessage(
+                msg.chat.id,
+                `Nilai y2 yang diprediksi adalah ${jres[1]}`
+            );
+            bot.sendmessage(
+                msg.chat.id,
+                `Nilai y3 yang diprediksi adalah ${jres[2]}`
+            );
+            state = 0;
+        })
+    }else{
+        state = 0
+    }
+})
+
 // routers
-r.get('/prediction/:i/:r', function(req, res, next) {    
+r.get('predict/:x1/:x2/:x3', function(req, res, next) {
     model.predict(
         [
-            parseFloat(req.params.i), // string to float
-            parseFloat(req.params.r)
-        ]
+            parsefloat(req.params.x1),// string float
+            parsefloat(req.params.x2),
+            parsefloat(req.params.x3)
+        ]    
     ).then((jres)=>{
         res.json(jres);
     })
 });
-
 module.exports = r;

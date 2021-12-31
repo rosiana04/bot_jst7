@@ -10,21 +10,22 @@ const token = '5040677518:AAHV5a_H5BccIpJtYkUSC4GlYsIMTC9hkQw'
 const bot = new TelegramBot(token, {polling: true});
 
 state = 0
-// bots
+// Main Menu Bot
 bot.onText(/\/start/, (msg) => { 
-    console.log(msg)
     bot.sendMessage(
         msg.chat.id,
-        `halo selamat datang ! ${msg.chat.first_name}, welcome...\n
+        `hello ${msg.chat.first_name}, welcome...\n
         click /predict`
     );   
+    state = 0;
 });
-// input requires x1 , x2 dan x3
+
+// input requires x1 x2 x3
 bot.onText(/\/predict/, (msg) => { 
     bot.sendMessage(
         msg.chat.id,
-        `Masukan nilai x1|x2|x3 contohnya 8|8|8`
-    );
+        `masukan nilai x1|x2|x3 contohnya 9|9|5`
+    );   
     state = 1;
 });
 
@@ -35,41 +36,41 @@ bot.on('message', (msg) => {
         x2 = s[1]
         x3 = s[2]
         model.predict(
-            [ 
-                parseFloat(s[0]), // string float
+            [
+                parseFloat(s[0]), // string to float
                 parseFloat(s[1]),
                 parseFloat(s[2])
             ]
         ).then((jres)=>{
-            bot.sendmessage(
-                msg.chat.id,
-                `Nilai y1 yang diprediksi adalah ${jres[0]}`
-            );  
-            bot.sendmessage(
-                msg.chat.id,
-                `Nilai y2 yang diprediksi adalah ${jres[1]}`
-            );
-            bot.sendmessage(
-                msg.chat.id,
-                `Nilai y3 yang diprediksi adalah ${jres[2]}`
-            );
-            state = 0;
+                bot.sendMessage(
+                    msg.chat.id,
+                    `Prediksi y1 Tegangan ${jres[0]}`
+                );
+                bot.sendMessage(
+                    msg.chat.id,
+                    `nilai y2 yang diprediksi adalah ${jres[1]}`
+                ); 
+                bot.sendMessage(
+                    msg.chat.id,
+                    `Prediksi y3 ${jres[2]}`
+                );
         })
     }else{
-        state = 0
+        state = 0;
     }
 })
 
 // routers
-r.get('predict/:x1/:x2/:x3', function(req, res, next) {
+// use => ...../api/predict/10/20
+r.get('/predict/:x1/:x2:x3', function(req, res, next) {    
     model.predict(
         [
-            parsefloat(req.params.x1),// string float
-            parsefloat(req.params.x2),
-            parsefloat(req.params.x3)
-        ]    
+            parseFloat(req.params.x1), // string to float
+            parseFloat(req.params.x2),
+            parseFloat(req.params.x3)
+        ]
     ).then((jres)=>{
-        res.json(jres);
+        res.json(jres); // to pc / arduino
     })
 });
 module.exports = r;

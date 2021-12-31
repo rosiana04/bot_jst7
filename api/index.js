@@ -1,4 +1,3 @@
-
 var express = require('express');
 var r = express.Router();
 
@@ -7,7 +6,7 @@ const model = require('./sdk/model.js');
 
 // Bot Setting
 const TelegramBot = require('node-telegram-bot-api');
-const token = '5073546476:AAG4rie_ytVRpRfHLYNLt0cDz_YcjDidZAE'
+const token = '5040677518:AAHV5a_H5BccIpJtYkUSC4GlYsIMTC9hkQw'
 const bot = new TelegramBot(token, {polling: true});
 
 state = 0
@@ -24,7 +23,7 @@ bot.onText(/\/start/, (msg) => {
 bot.onText(/\/predict/, (msg) => { 
     bot.sendMessage(
         msg.chat.id,
-        `Masukan nilai x1|x2|x3 contohnya 7|7|7`
+        `Masukan nilai x1|x2|x3 contohnya 8|8|8`
     );
     state = 1;
 });

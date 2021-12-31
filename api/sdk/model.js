@@ -1,20 +1,22 @@
 const tf = require('@tensorflow/tfjs-node');
 
-function normalized(data){ // i & r
-    i = (data[0] - 12.585) / 6.813882
-    r = (data[1] - 51.4795) / 29.151289
-    return [i, r]
+function normalized(data){ // x1 x2 x3
+    x1 = (data[0] - 42,794) / 10,60339549
+    x2 = (data[1] - 88,509) / 19,06251028
+    x3 = (data[2] - 143,127) / 22,86503183
+    return [x1, x2, x3]
 }
 
 function denormalized(data){
-    v = (data[0] * 552.6264) + 650.4795
-    p = (data[1] * 12153.8) + 10620.5615
-    return [v, p]
+    y1 = (data[0] * 9,20165319) + 74,807
+    y2 = (data[1] * 14,85172777) + 49,766
+    y3 = (data[2] * 23,85217469) + 160,133
+    return [y1, y2, y3]
 }
 
 
 async function predict(data){
-    let in_dim = 2;
+    let in_dim = 3;
     
     data = normalized(data);
     shape = [1, in_dim];
@@ -23,7 +25,7 @@ async function predict(data){
 
     try{
         // path load in public access => github
-        const path = 'https://raw.githubusercontent.com/nraziztn/bot-nur-aziz-41419010020/main/public/ex_model/model.json?token=5032006078:AAEqFrvzCagE0LxcTi02wILNgtjAjPQ1r4M';
+        const path = 'https://raw.githubusercontent.com/rosiana04/bot_jst7/main/public/ex_model/model.json token=5040677518:AAHV5a_H5BccIpJtYkUSC4GlYsIMTC9hkQw';
         const model = await tf.loadGraphModel(path);
         
         predict = model.predict(
@@ -40,4 +42,3 @@ async function predict(data){
 module.exports = {
     predict: predict 
 }
-  
